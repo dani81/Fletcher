@@ -8,7 +8,7 @@
   crossorigin="anonymous">
 </script>
 </head>
-<body style="padding: 25px; background-color: linen; margin-left: 40px;")">
+<body style="padding: 25px; background-color: lightblue; margin-left: 40px; color: white; text-align: center; font-family: verdana;")">
 
 </body>
 
@@ -20,31 +20,40 @@
 </head>
 <body>
 <br />
-<h3>Danielle!</h3>
-<button id="comicButton">Get comic</button>
+<h3>Here are some of our favorite XKCD comics!</h3>
+<button id="comicButton">Get Comic</button>
 <span id="xkcdcontent"></span>
 <script>
   var items = [356, 627, 1145, 953, 184, 1364, 327, 895, 1103, 1067, 1451, 1367, 793, 999, 451, 1695, 1295, 1639, 1489, 1489, 1489, 1489, 1475, 1403, 932, 954, 954, 954, 954, 954, 1047, 1138, 1045, 1400, 1132];
+  var used = [];
+  var next = 356;
   var first = true;
-  $("#oneComic").click(function(){
-    alert("Hello!");
-  });
   $('#comicButton').click(function(){
-    var myurl= "http://dynamic.xkcd.com/api-0/jsonp/comic/" + items[Math.floor(Math.random()*items.length)];
+    next = items[Math.floor(Math.random()*items.length)];
+    var limit = 0;
+    while($.inArray(next,used) != -1){
+      used.push(next);
+      next = items[Math.floor(Math.random()*items.length)];
+      limit++;
+      if(limit > 100){
+        alert("We don't actually have that many favorites...");
+        return;
+      }
+    }
+    used.push(next);
+    var myurl= "http://dynamic.xkcd.com/api-0/jsonp/comic/" + next;
     $.ajax({
       url : myurl,
       crossDomain: true,
       dataType : "jsonp",
       success : function(parsed_json) {
-        console.log(parsed_json);
         if(first){
           $("#comicButton").html("Get Another Comic");
           first = false;
         } else {
           $("#comicButton").append("!");
         }
-        $("#xkcdcontent").append("<div id=oneComic>");
-        $("#xkcdcontent").append(
+        $("#xkcdcontent").prepend( 
               $("<h1/>").text(parsed_json.title),
               $("<img/>").attr({
                   src: parsed_json.img,
@@ -52,7 +61,6 @@
                   alt: parsed_json.title
               })
           );
-        $("#xkcdcontent").append("</div>");
       }
     });
   });

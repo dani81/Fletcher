@@ -1,14 +1,61 @@
-<!DOCTYPE html>
+
+
 <html>
 <head>
-<title>Page Title</title>
+<script
+  src="http://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous">
+</script>
 </head>
-<body>
-
-<h1>This is a Heading</h1>
-<p>This is a paragraph.</p>
+<body style="padding: 25px; background-color: linen; margin-left: 40px;")">
 
 </body>
-  <script src="demo_script_src.js">
+
+
+
+<title>XKCD</title>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+</head>
+<body>
+<br />
+<h3>Danielle!</h3>
+<button id="comicButton">Get comic</button>
+<span id="xkcdcontent"></span>
+<script>
+  var items = [356, 627, 1145, 953, 184, 1364, 327, 895, 1103, 1067, 1451, 1367, 793, 999, 451, 1695, 1295, 1639, 1489, 1489, 1489, 1489, 1475, 1403, 932, 954, 954, 954, 954, 954, 1047, 1138, 1045, 1400, 1132];
+  var first = true;
+  $("#oneComic").click(function(){
+    alert("Hello!");
+  });
+  $('#comicButton').click(function(){
+    var myurl= "http://dynamic.xkcd.com/api-0/jsonp/comic/" + items[Math.floor(Math.random()*items.length)];
+    $.ajax({
+      url : myurl,
+      crossDomain: true,
+      dataType : "jsonp",
+      success : function(parsed_json) {
+        console.log(parsed_json);
+        if(first){
+          $("#comicButton").html("Get Another Comic");
+          first = false;
+        } else {
+          $("#comicButton").append("!");
+        }
+        $("#xkcdcontent").append("<div id=oneComic>");
+        $("#xkcdcontent").append(
+              $("<h1/>").text(parsed_json.title),
+              $("<img/>").attr({
+                  src: parsed_json.img,
+                  title: parsed_json.alt,
+                  alt: parsed_json.title
+              })
+          );
+        $("#xkcdcontent").append("</div>");
+      }
+    });
+  });
 </script>
+
 </html>
